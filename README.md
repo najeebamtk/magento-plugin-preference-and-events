@@ -1,0 +1,1 @@
+# magento-plugin-preference-and-events
