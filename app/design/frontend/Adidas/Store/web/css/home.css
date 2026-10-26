@@ -1,0 +1,86 @@
+/* Adidas Store Homepage */
+
+.adidas-hero {
+    background: #111;
+    color: #fff;
+    padding: 90px 40px;
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.adidas-hero h1 {
+    font-size: 52px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.adidas-hero p {
+    font-size: 20px;
+    margin-bottom: 30px;
+}
+
+.adidas-button {
+    display: inline-block;
+    background: #fff;
+    color: #111;
+    padding: 14px 30px;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.adidas-section {
+    margin: 50px 0;
+}
+
+.adidas-section-title {
+    text-align: center;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+.adidas-categories {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.adidas-category {
+    background: #f5f5f5;
+    padding: 50px 20px;
+    text-align: center;
+}
+
+.adidas-category h3 {
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.adidas-category a {
+    color: #111;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.adidas-promo {
+    background: #f5f5f5;
+    padding: 60px 30px;
+    text-align: center;
+}
+
+.adidas-promo h2 {
+    font-size: 36px;
+    margin-bottom: 15px;
+}
+
+@media (max-width: 768px) {
+    .adidas-categories {
+        grid-template-columns: 1fr;
+    }
+
+    .adidas-hero h1 {
+        font-size: 36px;
+    }
+}
+
+

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- around plugin: block Cash on Delivery for selected pincodes -->
+    <type name="Magento\OfflinePayments\Model\Cashondelivery">
+        <plugin name="codilar_helloworld_cod_pincode"
+                type="Codilar\HelloWorld\Plugin\CodPincodePlugin"/>
+    </type>
+
+    <!-- after plugin: free Flat Rate shipping for the Employee customer group -->
+    <type name="Magento\OfflineShipping\Model\Carrier\Flatrate">
+        <plugin name="codilar_helloworld_employee_free_shipping"
+                type="Codilar\HelloWorld\Plugin\EmployeeFreeShippingPlugin"/>
+    </type>
+
+    <!-- preference: block common passwords at registration, reset and change password -->
+    <preference for="Magento\Customer\Model\AccountManagement"
+                type="Codilar\HelloWorld\Model\AccountManagement"/>
+</config>

@@ -1,0 +1,36 @@
+<div class="hello-product-form">
+    <h2>Add Your Product</h2>
+
+    <form action="<?= $block->escapeUrl($block->getUrl('hello/product/save')) ?>"
+          method="post" enctype="multipart/form-data">
+
+        <?= $block->getBlockHtml('formkey') ?>
+
+        <div class="form-field">
+            <label for="name">Product Name</label>
+            <input type="text" name="name" id="name" required>
+        </div>
+
+        <div class="form-field">
+            <label for="sku">SKU</label>
+            <input type="text" name="sku" id="sku" required>
+        </div>
+
+        <div class="form-field">
+            <label for="price">Price</label>
+            <input type="number" name="price" id="price"
+                   min="0" step="0.01" required>
+        </div>
+
+        <div class="form-field">
+            <label for="image">Choose Product Image</label>
+            <input type="file" name="image" id="image" accept="image/*">
+        </div>
+
+        <button type="submit">Save Product</button>
+    </form>
+
+    <p class="hello-product-view-all">
+        <a href="<?= $block->escapeUrl($block->getUrl('hello/product/listAction')) ?>">View all products &rarr;</a>
+    </p>
+</div>

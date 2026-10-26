@@ -1,0 +1,177 @@
+/*
+ * Styles for the product list page (Codilar_HelloWorld).
+ * Every class starts with "product-" so it cannot clash with the theme.
+ */
+
+:root {
+    --product-primary: #4f46e5;
+    --product-primary-dark: #4338ca;
+    --product-text: #1f2937;
+    --product-muted: #6b7280;
+    --product-border: #e5e7eb;
+    --product-card: #ffffff;
+    --product-radius: 14px;
+    --product-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+}
+
+.product-list-page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 20px 60px;
+    color: var(--product-text);
+}
+
+/* ---------- Header ---------- */
+
+.product-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+.product-title {
+    margin: 0 0 6px;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--product-text);
+}
+
+.product-subtitle {
+    margin: 0;
+    color: var(--product-muted);
+}
+
+/* ---------- Button and links ---------- */
+
+.product-button {
+    display: inline-block;
+    padding: 12px 22px;
+    border-radius: 10px;
+    background: var(--product-primary);
+    color: #fff !important;
+    font-weight: 600;
+    font-size: 15px;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.product-button:hover {
+    background: var(--product-primary-dark);
+}
+
+.product-link {
+    color: var(--product-primary);
+    font-weight: 600;
+}
+
+/* ---------- Card grid ---------- */
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 24px;
+}
+
+.product-item {
+    display: flex;
+    flex-direction: column;
+    background: var(--product-card);
+    border-radius: var(--product-radius);
+    box-shadow: var(--product-shadow);
+    padding: 20px;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.product-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
+}
+
+.product-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 160px;
+    margin-bottom: 16px;
+    border-radius: 10px;
+    background: #f9fafb;
+    overflow: hidden;
+}
+
+.product-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.product-image-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--product-primary);
+    color: #fff;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.product-item-name {
+    margin: 0 0 12px;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--product-text);
+}
+
+/* ---------- Badges ---------- */
+
+.product-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: auto;
+}
+
+.product-badge {
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.product-badge-sku {
+    background: #eef2ff;
+    color: var(--product-primary-dark);
+}
+
+.product-badge-price {
+    background: #ecfdf5;
+    color: #047857;
+}
+
+/* ---------- Empty state ---------- */
+
+.product-empty {
+    padding: 36px;
+    text-align: center;
+    background: var(--product-card);
+    border: 1px dashed var(--product-border);
+    border-radius: var(--product-radius);
+    color: var(--product-muted);
+}
+
+/* ---------- Small screens ---------- */
+
+@media (max-width: 600px) {
+    .product-title {
+        font-size: 24px;
+    }
+
+    .product-grid {
+        grid-template-columns: 1fr;
+    }
+}

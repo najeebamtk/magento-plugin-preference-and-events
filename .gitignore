@@ -1,0 +1,17 @@
+# Ignore everything in the Magento root...
+/*
+
+# ...except this file
+!/.gitignore
+
+# ...and only app/code (our own modules)
+!/app/
+/app/*
+!/app/code/
+
+# ...and only our own theme from app/design
+!/app/design/
+/app/design/*
+!/app/design/frontend/
+/app/design/frontend/*
+!/app/design/frontend/Adidas/

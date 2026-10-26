@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="checkout_cart_product_add_after">
+        <observer name="codilar_helloworld_cart_add_message"
+                  instance="Codilar\HelloWorld\Observer\CartAddMessage" />
+    </event>
+
+    <!-- event: move @codilar.com customers to Employee group on registration -->
+    <event name="customer_register_success">
+        <observer name="codilar_helloworld_assign_employee_group"
+                  instance="Codilar\HelloWorld\Observer\AssignEmployeeGroup" />
+    </event>
+</config>

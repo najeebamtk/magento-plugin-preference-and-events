@@ -1,0 +1,66 @@
+
+.hello-product-form {
+    max-width: 500px;
+    margin: 30px auto;
+    padding: 25px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.hello-product-form h2 {
+    margin-bottom: 25px;
+    font-size: 24px;
+}
+
+.hello-product-form .form-field {
+    margin-bottom: 18px;
+}
+
+.hello-product-form label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.hello-product-form input {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.hello-product-form input[type="file"] {
+    padding: 7px;
+}
+
+.hello-product-form button {
+    padding: 11px 22px;
+    background: #1979c3;
+    color: #fff;
+    border: 0;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.hello-product-form button:hover {
+    background: #145f96;
+}
+
+/* "View all products" link under the form */
+.hello-product-view-all {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.hello-product-view-all a {
+    color: #1979c3;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.hello-product-view-all a:hover {
+    text-decoration: underline;
+}

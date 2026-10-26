@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <block class="Magento\Framework\View\Element\Template" name="adidas.home.text" template="Magento_Cms::adidas/home-text.phtml" before="-"/>
+            <block class="Magento\Framework\View\Element\Template" name="adidas.home.offer" template="Magento_Cms::adidas/home-offer.phtml" after="adidas.home.text"/>
+        </referenceContainer>
+    </body>
+</page>

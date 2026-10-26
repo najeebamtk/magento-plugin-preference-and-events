@@ -1,0 +1,44 @@
+<?php
+/** @var \Codilar\School\Block\School $block */
+?>
+<div class="school-page">
+    <div class="school-card">
+        <h1 class="school-title">Add a School</h1>
+        <p class="school-subtitle">Enter the school details below. Name and code are required.</p>
+
+        <form class="school-form"
+              action="<?= $block->escapeUrl($block->getUrl('school/school/save')) ?>"
+              method="post"
+              enctype="multipart/form-data"
+              id="school-form">
+            <!-- Magento checks this key on every POST -->
+            <input type="hidden" name="form_key" value="<?= $block->escapeHtmlAttr($block->getFormKey()) ?>">
+
+            <div class="school-field">
+                <label for="school-name">School name <span class="school-required">*</span></label>
+                <input type="text" id="school-name" name="name" required maxlength="255" placeholder="e.g. Green Valley High">
+            </div>
+
+            <div class="school-field">
+                <label for="school-code">School code <span class="school-required">*</span></label>
+                <input type="text" id="school-code" name="code" required maxlength="64" placeholder="e.g. GVH-001">
+            </div>
+
+            <div class="school-field">
+                <label for="school-city">City</label>
+                <input type="text" id="school-city" name="city" maxlength="255" placeholder="e.g. Chennai">
+            </div>
+
+            <div class="school-field">
+                <label for="school-logo">Logo <span class="school-optional">(optional)</span></label>
+                <input type="file" id="school-logo" name="logo" accept="image/jpeg,image/png,image/gif,image/webp">
+                <small class="school-hint">JPG, PNG, GIF or WEBP.</small>
+            </div>
+
+            <div class="school-actions">
+                <button type="submit" class="school-button">Save school</button>
+                <a class="school-link" href="<?= $block->escapeUrl($block->getUrl('school/school/lists')) ?>">View all schools</a>
+            </div>
+        </form>
+    </div>
+</div>

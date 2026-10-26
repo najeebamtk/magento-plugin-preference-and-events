@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Catalog\Model\Product">
+        <plugin name="codilar_helloworld_name_sale"
+                type="Codilar\HelloWorld\Plugin\ProductNamePlugin"/>
+    </type>
+
+    <!-- before plugin: newsletter email -->
+    <type name="Magento\Newsletter\Model\SubscriptionManager">
+        <plugin name="codilar_helloworld_newsletter_email"
+                type="Codilar\HelloWorld\Plugin\NewsletterEmailPlugin"/>
+    </type>
+
+<!-- around plugin: hide Add to Cart for expensive products -->
+<type name="Magento\Catalog\Model\Product">
+    <plugin name="codilar_helloworld_saleable_check"
+            type="Codilar\HelloWorld\Plugin\ProductSaleablePlugin"/>
+</type>
+
+<!-- around plugin: home page product links (before + after) -->
+<type name="Magento\CatalogWidget\Block\Product\ProductsList">
+    <plugin name="codilar_helloworld_product_url"
+            type="Codilar\HelloWorld\Plugin\ProductUrlPlugin" disabled="true"/>
+</type>
+
+
+ <!-- preference: our ProductsList, overriding the protected _afterToHtml() -->
+<preference for="Magento\CatalogWidget\Block\Product\ProductsList"
+            type="Codilar\HelloWorld\Block\Product\ProductsList"/>   
+
+<type name="Magento\Checkout\Model\Cart">
+<plugin name="codilar_helloworld_max_qty"
+type="Codilar\HelloWorld\Plugin\MaxQtyPlugin"/>
+</type>
+
+<type name="Magento\Catalog\Model\Product">
+    <plugin name="codilar_helloworld_max_qty_saleable"
+            type="Codilar\HelloWorld\Plugin\MaxQtySaleablePlugin"/>
+</type>
+
+
+
+
+</config>

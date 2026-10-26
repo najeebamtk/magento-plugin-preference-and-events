@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- before plugin: a selected product can only be added / updated in multiples of 2 -->
+    <type name="Magento\Checkout\Model\Cart">
+        <plugin name="codilar_qtystep_multiple_of_two"
+                type="Codilar\QtyStep\Plugin\QtyStepPlugin"/>
+    </type>
+</config>

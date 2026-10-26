@@ -1,0 +1,8 @@
+<!-- 
+  theme.xml describes the theme to Magento.
+  <parent> makes this a child theme: anything not overridden is inherited from Magento/blank.
+ -->
+<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Config/etc/theme.xsd">
+<title>Codilar Starter Theme</title>
+<parent>Magento/blank</parent>
+</theme>

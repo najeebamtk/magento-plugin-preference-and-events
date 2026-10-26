@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd"
+      layout="1column">
+    <head>
+        <title>Add a School</title>
+        <css src="Codilar_School::css/school.css"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Codilar\School\Block\School"
+                   name="codilar.school.form"
+                   template="Codilar_School::school_form.phtml"/>
+        </referenceContainer>
+    </body>
+</page>
