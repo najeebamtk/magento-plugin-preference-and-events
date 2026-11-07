@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <!-- Default values for system.xml fields, used until an admin saves the setting -->
+    <default>
+        <return_management>
+            <general>
+                <enabled>1</enabled>
+            </general>
+        </return_management>
+    </default>
+</config>

@@ -1,0 +1,300 @@
+<?php
+/** @var \Codilar\CategoryAttribute\Block\SaleCountdown $block */
+/** @var \Magento\Framework\Escaper $escaper */
+/** @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer */
+$endTimestamp = $block->getEndTimestamp();
+?>
+<?php if ($endTimestamp): ?>
+<style>
+    .sale-float {
+        --accent: #d8d513;
+        --urgent: #ff4d3d;
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+        z-index: 900;
+        font-family: inherit;
+        animation: sale-float-in .7s cubic-bezier(.2, 1.4, .4, 1) both;
+    }
+    .sale-float.is-urgent { --accent: var(--urgent); }
+
+    /* ---------- expanded card ---------- */
+    .sale-float__card {
+        position: relative;
+        width: 300px;
+        padding: 18px 18px 14px;
+        border-radius: 20px;
+        color: #fff;
+        background: linear-gradient(145deg, #1b1b1b 0%, #0b0b0b 100%);
+        border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+        box-shadow: 0 18px 40px rgba(0, 0, 0, .35), 0 0 0 4px color-mix(in srgb, var(--accent) 12%, transparent);
+        overflow: hidden;
+    }
+    .sale-float__card::before {
+        content: "";
+        position: absolute;
+        inset: -40% -40% auto auto;
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        background: radial-gradient(circle, color-mix(in srgb, var(--accent) 35%, transparent), transparent 70%);
+        pointer-events: none;
+    }
+    .sale-float__head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+    .sale-float__badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: var(--accent);
+        color: #000;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+    }
+    .sale-float__badge-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #000;
+        animation: sale-float-blink 1s steps(2, start) infinite;
+    }
+    .sale-float__min {
+        width: 28px;
+        height: 28px;
+        border: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, .08);
+        color: #fff;
+        font-size: 18px;
+        line-height: 28px;
+        cursor: pointer;
+        padding: 0;
+    }
+    .sale-float__min:hover { background: rgba(255, 255, 255, .18); }
+    .sale-float__title {
+        margin: 0 0 12px;
+        font-size: 15px;
+        font-weight: 600;
+        line-height: 1.3;
+    }
+    .sale-float__title strong { color: var(--accent); text-transform: capitalize; }
+
+    .sale-float__tiles {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+    }
+    .sale-float__tile {
+        padding: 8px 0 6px;
+        border-radius: 12px;
+        text-align: center;
+        background: rgba(255, 255, 255, .06);
+        border: 1px solid rgba(255, 255, 255, .08);
+    }
+    .sale-float__num {
+        display: block;
+        font-size: 24px;
+        font-weight: 800;
+        line-height: 1.1;
+        color: var(--accent);
+        font-variant-numeric: tabular-nums;
+    }
+    .sale-float__num.is-tick { animation: sale-float-tick .35s ease-out; }
+    .sale-float__label {
+        font-size: 10px;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, .6);
+    }
+    .sale-float__foot {
+        margin-top: 12px;
+        font-size: 12px;
+        color: rgba(255, 255, 255, .6);
+    }
+    .sale-float__shine {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        height: 3px;
+        width: 100%;
+        background: linear-gradient(90deg, transparent, var(--accent), transparent);
+        background-size: 50% 100%;
+        background-repeat: no-repeat;
+        animation: sale-float-shine 2.4s linear infinite;
+    }
+
+    /* ---------- minimised bubble ---------- */
+    .sale-float__bubble {
+        display: none;
+        position: relative;
+        width: 74px;
+        height: 74px;
+        border: 0;
+        border-radius: 50%;
+        padding: 0;
+        cursor: pointer;
+        color: #000;
+        background: var(--accent);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, .3);
+        animation: sale-float-pulse 2s ease-in-out infinite;
+    }
+    .sale-float__bubble::after {
+        content: "";
+        position: absolute;
+        inset: -6px;
+        border-radius: 50%;
+        border: 2px dashed var(--accent);
+        animation: sale-float-spin 8s linear infinite;
+    }
+    .sale-float__bubble-icon { display: block; font-size: 20px; line-height: 1; }
+    .sale-float__bubble-time { display: block; font-size: 12px; font-weight: 800; margin-top: 2px; }
+
+    .sale-float.is-min .sale-float__card { display: none; }
+    .sale-float.is-min .sale-float__bubble { display: block; }
+
+    /* ---------- animations ---------- */
+    @keyframes sale-float-in {
+        from { opacity: 0; transform: translateY(40px) scale(.9); }
+        to { opacity: 1; transform: none; }
+    }
+    @keyframes sale-float-tick {
+        0% { transform: translateY(-6px); opacity: .3; }
+        100% { transform: none; opacity: 1; }
+    }
+    @keyframes sale-float-blink { to { visibility: hidden; } }
+    @keyframes sale-float-shine {
+        from { background-position: -50% 0; }
+        to { background-position: 150% 0; }
+    }
+    @keyframes sale-float-pulse {
+        0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 60%, transparent); }
+        50% { box-shadow: 0 0 0 14px transparent; }
+    }
+    @keyframes sale-float-spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 640px) {
+        .sale-float { right: 12px; left: 12px; bottom: 12px; }
+        .sale-float__card { width: auto; }
+        .sale-float.is-min { left: auto; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .sale-float, .sale-float * { animation: none !important; }
+    }
+</style>
+
+<div id="sale-float" class="sale-float" data-end="<?= (int)$endTimestamp ?>"
+     data-urgent-label="<?= $escaper->escapeHtmlAttr(__('Ending soon')) ?>" role="complementary"
+     aria-label="<?= $escaper->escapeHtmlAttr(__('Sale countdown')) ?>">
+    <div class="sale-float__card">
+        <div class="sale-float__head">
+            <span class="sale-float__badge">
+                <span class="sale-float__badge-dot"></span>
+                <span class="sale-float__badge-text"><?= $escaper->escapeHtml(__('Flash Sale')) ?></span>
+            </span>
+            <button type="button" class="sale-float__min" aria-label="<?= $escaper->escapeHtmlAttr(__('Minimise')) ?>">&minus;</button>
+        </div>
+        <p class="sale-float__title">
+            🔥 <strong><?= $escaper->escapeHtml($block->getCategoryName()) ?></strong>
+            <?= $escaper->escapeHtml(__('sale ends in')) ?>
+        </p>
+        <div class="sale-float__tiles">
+            <div class="sale-float__tile"><span class="sale-float__num" data-unit="d">00</span><span class="sale-float__label"><?= $escaper->escapeHtml(__('Days')) ?></span></div>
+            <div class="sale-float__tile"><span class="sale-float__num" data-unit="h">00</span><span class="sale-float__label"><?= $escaper->escapeHtml(__('Hrs')) ?></span></div>
+            <div class="sale-float__tile"><span class="sale-float__num" data-unit="m">00</span><span class="sale-float__label"><?= $escaper->escapeHtml(__('Min')) ?></span></div>
+            <div class="sale-float__tile"><span class="sale-float__num" data-unit="s">00</span><span class="sale-float__label"><?= $escaper->escapeHtml(__('Sec')) ?></span></div>
+        </div>
+        <div class="sale-float__foot">
+            <?= $escaper->escapeHtml(__('Offer valid till %1', $block->getEndDateLabel())) ?>
+        </div>
+        <span class="sale-float__shine"></span>
+    </div>
+    <button type="button" class="sale-float__bubble" aria-label="<?= $escaper->escapeHtmlAttr(__('Show sale countdown')) ?>">
+        <span class="sale-float__bubble-icon">🔥</span>
+        <span class="sale-float__bubble-time"></span>
+    </button>
+</div>
+
+<?php $script = <<<JS
+(function () {
+    var box = document.getElementById('sale-float');
+    var end = parseInt(box.dataset.end, 10) * 1000;
+    var nums = {};
+    box.querySelectorAll('.sale-float__num').forEach(function (el) {
+        nums[el.dataset.unit] = el;
+    });
+    var bubbleTime = box.querySelector('.sale-float__bubble-time');
+    var badgeText = box.querySelector('.sale-float__badge-text');
+    var storageKey = 'saleFloatMinimised';
+
+    function setMinimised(min) {
+        box.classList.toggle('is-min', min);
+        try {
+            sessionStorage.setItem(storageKey, min ? '1' : '0');
+        } catch (e) {}
+    }
+
+    try {
+        if (sessionStorage.getItem(storageKey) === '1') {
+            box.classList.add('is-min');
+        }
+    } catch (e) {}
+
+    box.querySelector('.sale-float__min').addEventListener('click', function () {
+        setMinimised(true);
+    });
+    box.querySelector('.sale-float__bubble').addEventListener('click', function () {
+        setMinimised(false);
+    });
+
+    function pad(n) {
+        return n < 10 ? '0' + n : String(n);
+    }
+
+    function show(unit, value) {
+        var el = nums[unit];
+        var text = pad(value);
+        if (el.textContent !== text) {
+            el.textContent = text;
+            el.classList.remove('is-tick');
+            void el.offsetWidth;
+            el.classList.add('is-tick');
+        }
+    }
+
+    function tick() {
+        var left = end - Date.now();
+        if (left <= 0) {
+            box.style.display = 'none';
+            return;
+        }
+        var d = Math.floor(left / 86400000);
+        var h = Math.floor(left / 3600000) % 24;
+        var m = Math.floor(left / 60000) % 60;
+        var s = Math.floor(left / 1000) % 60;
+
+        show('d', d);
+        show('h', h);
+        show('m', m);
+        show('s', s);
+        bubbleTime.textContent = d > 0 ? d + 'd ' + h + 'h' : pad(h) + ':' + pad(m) + ':' + pad(s);
+
+        if (left < 86400000 && !box.classList.contains('is-urgent')) {
+            box.classList.add('is-urgent');
+            badgeText.textContent = box.dataset.urgentLabel;
+        }
+        setTimeout(tick, 1000);
+    }
+    tick();
+})();
+JS;
+?>
+<?= /* @noEscape */ $secureRenderer->renderTag('script', [], $script, false) ?>
+<?php endif; ?>

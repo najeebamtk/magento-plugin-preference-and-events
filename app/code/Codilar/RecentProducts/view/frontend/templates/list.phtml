@@ -1,0 +1,60 @@
+<?php
+/**
+ * Shows the 10 recent products by calling our cached REST API with JavaScript.
+ * Every page load calls the API, so each refresh logs HIT or MISS in var/log/system.log.
+ *
+ * @var \Magento\Framework\View\Element\Template $block
+ * @var \Magento\Framework\Escaper $escaper
+ * @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer
+ */
+$apiUrl = $block->getBaseUrl() . 'rest/V1/codilar/recent-products';
+?>
+<div class="codilar-recent-products">
+    <p id="codilar-recent-status"><?= $escaper->escapeHtml(__('Loading products...')) ?></p>
+    <table class="data table" id="codilar-recent-table" style="display:none">
+        <thead>
+            <tr>
+                <th><?= $escaper->escapeHtml(__('ID')) ?></th>
+                <th><?= $escaper->escapeHtml(__('SKU')) ?></th>
+                <th><?= $escaper->escapeHtml(__('Name')) ?></th>
+                <th><?= $escaper->escapeHtml(__('Price')) ?></th>
+                <th><?= $escaper->escapeHtml(__('Created At')) ?></th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+<?php
+$script = <<<JS
+(function () {
+    var status = document.getElementById('codilar-recent-status');
+    var table = document.getElementById('codilar-recent-table');
+    var body = table.querySelector('tbody');
+
+    fetch('{$escaper->escapeJs($apiUrl)}', {
+        headers: { 'Accept': 'application/json' }
+    })
+        .then(function (response) {
+            if (!response.ok) { throw new Error('HTTP ' + response.status); }
+            return response.json();
+        })
+        .then(function (products) {
+            products.forEach(function (p) {
+                var row = document.createElement('tr');
+                [p.id, p.sku, p.name, Number(p.price).toFixed(2), p.created_at].forEach(function (value) {
+                    var cell = document.createElement('td');
+                    cell.textContent = value; // textContent = safe, no HTML injection
+                    row.appendChild(cell);
+                });
+                body.appendChild(row);
+            });
+            status.style.display = 'none';
+            table.style.display = '';
+        })
+        .catch(function (error) {
+            status.textContent = 'Could not load products (' + error.message + ')';
+        });
+})();
+JS;
+?>
+<?= /* @noEscape */ $secureRenderer->renderTag('script', [], $script, false) ?>

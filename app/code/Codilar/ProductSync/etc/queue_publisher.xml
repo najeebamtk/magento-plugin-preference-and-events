@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework-message-queue:etc/publisher.xsd">
+    <!-- Messages with this topic are sent to RabbitMQ (amqp), into the exchange "magento" -->
+    <publisher topic="codilar.product.sync">
+        <connection name="amqp" exchange="magento"/>
+    </publisher>
+    <!-- Failed messages also go to RabbitMQ, same exchange -->
+    <publisher topic="codilar.product.sync.failed">
+        <connection name="amqp" exchange="magento"/>
+    </publisher>
+</config>

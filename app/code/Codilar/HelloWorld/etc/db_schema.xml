@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="codilar_hello_product" resource="default" engine="innodb" comment="Products added by HelloWorld">
+        <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>
+        <column xsi:type="varchar" name="name" length="255" nullable="false" comment="Name"/>
+        <column xsi:type="varchar" name="sku" length="64" nullable="false" comment="SKU"/>
+        <column xsi:type="decimal" name="price" precision="12" scale="2" nullable="false" default="0" comment="Price"/>
+        <column xsi:type="varchar" name="image" length="255" nullable="true" comment="Image path"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+
+        <!-- NEW: unique key, so no two products can share a SKU -->
+        <constraint xsi:type="unique" referenceId="CODILAR_HELLO_PRODUCT_SKU">
+            <column name="sku"/>
+        </constraint>
+
+        <!-- NEW: normal index on name, for faster search by name -->
+        <index referenceId="CODILAR_HELLO_PRODUCT_NAME" indexType="btree">
+            <column name="name"/>
+        </index>
+    </table>
+
+    <!-- FAQ for Magento products: each row belongs to one product in catalog_product_entity -->
+    <table name="codilar_product_faq" resource="default" engine="innodb" comment="Product FAQ">
+        <column xsi:type="int" name="faq_id" padding="10" unsigned="true" nullable="false" identity="true" comment="FAQ ID"/>
+        <column xsi:type="int" name="product_id" padding="10" unsigned="true" nullable="false" comment="Magento Product ID"/>
+        <column xsi:type="varchar" name="question" length="255" nullable="false" comment="Question"/>
+        <column xsi:type="text" name="answer" nullable="true" comment="Answer"/>
+        <column xsi:type="smallint" name="is_active" unsigned="true" nullable="false" default="1" comment="Is Active (1 = show, 0 = hide)"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="faq_id"/>
+        </constraint>
+
+        <!-- Foreign key: product_id must exist in Magento's product table; deleting the product deletes its FAQs -->
+        <constraint xsi:type="foreign"
+                    referenceId="CODILAR_PRODUCT_FAQ_PRODUCT_ID_CATALOG_PRODUCT_ENTITY_ENTITY_ID"
+                    table="codilar_product_faq"
+                    column="product_id"
+                    referenceTable="catalog_product_entity"
+                    referenceColumn="entity_id"
+                    onDelete="CASCADE"/>
+    </table>
+
+</schema>

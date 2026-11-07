@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="codilar_product_sync" resource="default" engine="innodb" comment="Product Sync To External API">
+        <column xsi:type="int" name="sync_id" unsigned="true" nullable="false" identity="true"
+                comment="Sync ID"/>
+        <column xsi:type="int" name="product_id" unsigned="true" nullable="false"
+                comment="Product ID"/>
+        <column xsi:type="varchar" name="sku" length="64" nullable="true"
+                comment="Product SKU"/>
+        <column xsi:type="text" name="payload" nullable="false"
+                comment="Product data (JSON) to send to the API"/>
+        <column xsi:type="varchar" name="status" length="20" nullable="false" default="pending"
+                comment="pending / success / failed"/>
+        <column xsi:type="smallint" name="retry_count" unsigned="true" nullable="false" default="0"
+                comment="Number of attempts made"/>
+        <column xsi:type="text" name="last_error" nullable="true"
+                comment="Error from the last failed attempt"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="false" default="CURRENT_TIMESTAMP"
+                on_update="true" comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="sync_id"/>
+        </constraint>
+        <index referenceId="CODILAR_PRODUCT_SYNC_STATUS" indexType="btree">
+            <column name="status"/>
+        </index>
+    </table>
+</schema>

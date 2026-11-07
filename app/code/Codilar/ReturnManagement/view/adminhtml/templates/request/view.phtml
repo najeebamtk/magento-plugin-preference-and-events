@@ -1,0 +1,98 @@
+<?php
+/** @var \Codilar\ReturnManagement\Block\Adminhtml\Request\View $block */
+/** @var \Magento\Framework\Escaper $escaper */
+
+$returnRequest = $block->getReturnRequest();
+$order = $block->getOrder();
+?>
+<div class="page-actions">
+    <a class="action-default back" href="<?= $escaper->escapeUrl($block->getBackUrl()) ?>">
+        <?= $escaper->escapeHtml(__('Back to Return Requests')) ?>
+    </a>
+</div>
+
+<section class="admin__page-section">
+    <div class="admin__page-section-title">
+        <span class="title"><?= $escaper->escapeHtml(__('Request Information')) ?></span>
+    </div>
+    <table class="admin__table-secondary">
+        <tr>
+            <th><?= $escaper->escapeHtml(__('Request ID')) ?></th>
+            <td><?= (int) $returnRequest->getId() ?></td>
+        </tr>
+        <tr>
+            <th><?= $escaper->escapeHtml(__('Order #')) ?></th>
+            <td>
+                <a href="<?= $escaper->escapeUrl($block->getOrderViewUrl()) ?>">
+                    <?= $escaper->escapeHtml($order->getIncrementId()) ?>
+                </a>
+            </td>
+        </tr>
+        <tr>
+            <th><?= $escaper->escapeHtml(__('Customer')) ?></th>
+            <td><?= $escaper->escapeHtml($order->getCustomerName()) ?> (<?= $escaper->escapeHtml($order->getCustomerEmail()) ?>)</td>
+        </tr>
+        <tr>
+            <th><?= $escaper->escapeHtml(__('Reason')) ?></th>
+            <td><?= $escaper->escapeHtml($block->getReasonLabel()) ?></td>
+        </tr>
+        <tr>
+            <th><?= $escaper->escapeHtml(__('Comments')) ?></th>
+            <td><?= nl2br($escaper->escapeHtml($returnRequest->getComments() ?: '-')) ?></td>
+        </tr>
+        <tr>
+            <th><?= $escaper->escapeHtml(__('Requested On')) ?></th>
+            <td><?= $escaper->escapeHtml($block->formatDate($returnRequest->getCreatedAt(), \IntlDateFormatter::MEDIUM, true)) ?></td>
+        </tr>
+        <tr>
+            <th><?= $escaper->escapeHtml(__('Last Updated')) ?></th>
+            <td><?= $escaper->escapeHtml($block->formatDate($returnRequest->getUpdatedAt(), \IntlDateFormatter::MEDIUM, true)) ?></td>
+        </tr>
+    </table>
+</section>
+
+<section class="admin__page-section">
+    <div class="admin__page-section-title">
+        <span class="title"><?= $escaper->escapeHtml(__('Items Requested for Return')) ?></span>
+    </div>
+    <table class="data-table admin__table-primary">
+        <thead>
+            <tr>
+                <th><?= $escaper->escapeHtml(__('Product Name')) ?></th>
+                <th><?= $escaper->escapeHtml(__('SKU')) ?></th>
+                <th><?= $escaper->escapeHtml(__('Product ID')) ?></th>
+                <th><?= $escaper->escapeHtml(__('Qty Requested')) ?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($block->getItems() as $item): ?>
+                <tr>
+                    <td><?= $escaper->escapeHtml($item['product_name']) ?></td>
+                    <td><?= $escaper->escapeHtml($item['product_sku']) ?></td>
+                    <!-- NULL product_id = product was deleted; the SKU/name snapshot above still shows it -->
+                    <td><?= $item['product_id'] ? (int) $item['product_id'] : $escaper->escapeHtml(__('(deleted)')) ?></td>
+                    <td><?= (float) $item['qty_requested'] ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</section>
+
+<section class="admin__page-section">
+    <div class="admin__page-section-title">
+        <span class="title"><?= $escaper->escapeHtml(__('Update Status')) ?></span>
+    </div>
+    <form method="post" action="<?= $escaper->escapeUrl($block->getSaveUrl()) ?>">
+        <input type="hidden" name="form_key" value="<?= $escaper->escapeHtmlAttr($block->getFormKey()) ?>"/>
+        <input type="hidden" name="id" value="<?= (int) $returnRequest->getId() ?>"/>
+        <select name="status" class="admin__control-select">
+            <?php foreach ($block->getStatuses() as $value => $label): ?>
+                <option value="<?= $escaper->escapeHtmlAttr($value) ?>"
+                    <?= $value === $returnRequest->getStatus() ? 'selected' : '' ?>>
+                    <?= $escaper->escapeHtml($label) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+        <button type="submit" class="action-primary"><?= $escaper->escapeHtml(__('Save Status')) ?></button>
+    </form>
+</section>

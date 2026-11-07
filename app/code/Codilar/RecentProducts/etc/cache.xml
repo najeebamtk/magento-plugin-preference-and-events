@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Cache/etc/cache.xsd">
+    <type name="codilar_recent_products"
+          translate="label,description"
+          instance="Codilar\RecentProducts\Model\Cache\Type\RecentProducts">
+        <label>Codilar Recent Products</label>
+        <description>Caches the 10 most recently created products</description>
+    </type>
+</config>

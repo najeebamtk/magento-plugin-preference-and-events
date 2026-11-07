@@ -1,0 +1,83 @@
+<?php
+/** @var \Codilar\ReturnManagement\Block\Returns $block */
+/** @var \Magento\Framework\Escaper $escaper */
+
+$returnRequests = $block->getReturnRequests();
+$orders = $block->getEligibleOrders();
+?>
+<div class="block">
+    <div class="block-title"><strong><?= $escaper->escapeHtml(__('My Return Requests')) ?></strong></div>
+    <div class="block-content">
+        <?php if ($returnRequests->getSize()): ?>
+            <div class="table-wrapper">
+                <table class="data table">
+                    <thead>
+                        <tr>
+                            <th scope="col"><?= $escaper->escapeHtml(__('Request #')) ?></th>
+                            <th scope="col"><?= $escaper->escapeHtml(__('Order #')) ?></th>
+                            <th scope="col"><?= $escaper->escapeHtml(__('Requested On')) ?></th>
+                            <th scope="col"><?= $escaper->escapeHtml(__('Reason')) ?></th>
+                            <th scope="col"><?= $escaper->escapeHtml(__('Status')) ?></th>
+                            <th scope="col"><?= $escaper->escapeHtml(__('Last Updated')) ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($returnRequests as $request): ?>
+                            <tr>
+                                <td><?= (int) $request->getId() ?></td>
+                                <td><?= $escaper->escapeHtml($request->getIncrementId()) ?></td>
+                                <td><?= $escaper->escapeHtml($block->formatDate($request->getCreatedAt())) ?></td>
+                                <td><?= $escaper->escapeHtml($block->getReasonLabel((string) $request->getReason())) ?></td>
+                                <td><strong><?= $escaper->escapeHtml($block->getStatusLabel((string) $request->getStatus())) ?></strong></td>
+                                <td><?= $escaper->escapeHtml($block->formatDate($request->getUpdatedAt())) ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php else: ?>
+            <div class="message info empty"><span><?= $escaper->escapeHtml(__('You have not submitted any return requests.')) ?></span></div>
+        <?php endif; ?>
+    </div>
+</div>
+
+<div class="block">
+    <div class="block-title"><strong><?= $escaper->escapeHtml(__('Orders Eligible for Return')) ?></strong></div>
+    <div class="block-content">
+        <p><?= $escaper->escapeHtml(__('Completed orders that have been shipped can be returned within the product return period, counted from the shipment date.')) ?></p>
+        <?php if ($orders): ?>
+            <div class="table-wrapper">
+                <table class="data table">
+                    <thead>
+                        <tr>
+                            <th scope="col"><?= $escaper->escapeHtml(__('Order #')) ?></th>
+                            <th scope="col"><?= $escaper->escapeHtml(__('Date')) ?></th>
+                            <th scope="col"><?= $escaper->escapeHtml(__('Order Status')) ?></th>
+                            <th scope="col"><?= $escaper->escapeHtml(__('Return')) ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($orders as $order): ?>
+                            <tr>
+                                <td>
+                                    <a href="<?= $escaper->escapeUrl($block->getOrderViewUrl((int) $order->getId())) ?>">
+                                        <?= $escaper->escapeHtml($order->getIncrementId()) ?>
+                                    </a>
+                                </td>
+                                <td><?= $escaper->escapeHtml($block->formatDate($order->getCreatedAt())) ?></td>
+                                <td><?= $escaper->escapeHtml($order->getStatusLabel()) ?></td>
+                                <td>
+                                    <a class="action primary" href="<?= $escaper->escapeUrl($block->getFormUrl((int) $order->getId())) ?>">
+                                        <span><?= $escaper->escapeHtml(__('Request Return')) ?></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php else: ?>
+            <div class="message info empty"><span><?= $escaper->escapeHtml(__('You have no orders eligible for return.')) ?></span></div>
+        <?php endif; ?>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+{
+    "codilar_hello_product": {
+        "column": {
+            "entity_id": true,
+            "name": true,
+            "sku": true,
+            "price": true,
+            "image": true,
+            "created_at": true
+        },
+        "index": {
+            "CODILAR_HELLO_PRODUCT_NAME": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "CODILAR_HELLO_PRODUCT_SKU": true
+        }
+    },
+    "codilar_product_faq": {
+        "column": {
+            "faq_id": true,
+            "product_id": true,
+            "question": true,
+            "answer": true,
+            "is_active": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "CODILAR_PRODUCT_FAQ_PRODUCT_ID_CATALOG_PRODUCT_ENTITY_ENTITY_ID": true
+        }
+    }
+}

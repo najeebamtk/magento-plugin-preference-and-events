@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework-message-queue:etc/topology.xsd">
+    <!-- Exchange "magento" routes topic codilar.product.sync into the queue codilar.product.sync -->
+    <exchange name="magento" type="topic" connection="amqp">
+        <binding id="codilarProductSyncBinding"
+                 topic="codilar.product.sync"
+                 destinationType="queue"
+                 destination="codilar.product.sync"/>
+        <!-- Failed topic goes into its own queue. No consumer reads it, so failed messages stay visible -->
+        <binding id="codilarProductSyncFailedBinding"
+                 topic="codilar.product.sync.failed"
+                 destinationType="queue"
+                 destination="codilar.product.sync.failed"/>
+    </exchange>
+</config>
+ 

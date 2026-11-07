@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Codilar_DailyCustomerReport cron job declaration.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <job name="codilar_daily_customer_report"
+             instance="Codilar\DailyCustomerReport\Cron\GenerateCustomerReport"
+             method="execute">
+            <!-- Every day at 01:00 (store timezone, configured in Stores > Configuration > General > Locale Options) -->
+            <schedule>* 9 * * *</schedule>
+
+        </job>
+    </group>
+</config>

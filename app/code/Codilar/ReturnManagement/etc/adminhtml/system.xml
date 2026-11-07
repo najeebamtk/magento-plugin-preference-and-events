@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <!-- Stores > Configuration > CODILAR > Return Management -->
+        <tab id="codilar" translate="label" sortOrder="300">
+            <label>Codilar</label>
+        </tab>
+        <section id="return_management" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Return Management</label>
+            <tab>codilar</tab>
+            <resource>Codilar_ReturnManagement::config</resource>
+            <group id="general" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General</label>
+                <!-- Saved in core_config_data as path return_management/general/enabled -->
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Module</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>No = customers cannot see "My Returns" or create returns, and the admin menu is hidden.</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

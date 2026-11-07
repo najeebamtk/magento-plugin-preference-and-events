@@ -1,0 +1,57 @@
+{
+    "codilar_return_policy": {
+        "column": {
+            "policy_id": true,
+            "product_id": true,
+            "is_returnable": true,
+            "return_window_days": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "CODILAR_RETURN_POLICY_PRODUCT_ID": true,
+            "CODILAR_RETURN_POLICY_PRD_ID_CAT_PRD_ENTT_ENTT_ID": true
+        }
+    },
+    "codilar_return_request": {
+        "column": {
+            "request_id": true,
+            "customer_id": true,
+            "order_id": true,
+            "reason": true,
+            "comments": true,
+            "status": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "index": {
+            "CODILAR_RETURN_REQUEST_CUSTOMER_ID": true,
+            "CODILAR_RETURN_REQUEST_STATUS": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "CODILAR_RETURN_REQUEST_ORDER_ID": true,
+            "CODILAR_RETURN_REQUEST_CUSTOMER_ID_CUSTOMER_ENTITY_ENTITY_ID": true,
+            "CODILAR_RETURN_REQUEST_ORDER_ID_SALES_ORDER_ENTITY_ID": true
+        }
+    },
+    "codilar_return_request_item": {
+        "column": {
+            "request_id": true,
+            "order_item_id": true,
+            "product_id": true,
+            "product_sku": true,
+            "product_name": true,
+            "qty_requested": true
+        },
+        "index": {
+            "CODILAR_RETURN_REQUEST_ITEM_ORDER_ITEM_ID": true,
+            "CODILAR_RETURN_REQUEST_ITEM_PRODUCT_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_B394AE5AC681E696DA5AA44890604D05": true,
+            "FK_4D4BFEB963ABE4F5BD24895E1148BD50": true,
+            "CODILAR_RETURN_REQUEST_ITEM_PRD_ID_CAT_PRD_ENTT_ENTT_ID": true
+        }
+    }
+}

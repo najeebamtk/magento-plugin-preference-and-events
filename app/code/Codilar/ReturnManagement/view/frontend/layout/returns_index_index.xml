@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <!-- Reuse the My Account layout (sidebar navigation) -->
+    <update handle="customer_account"/>
+    <body>
+        <referenceContainer name="content">
+            <!-- cacheable="false": per-customer data must never go into the full page cache -->
+            <block class="Codilar\ReturnManagement\Block\Returns"
+                   name="codilar.returns.list"
+                   template="Codilar_ReturnManagement::returns/list.phtml"
+                   cacheable="false"/>
+        </referenceContainer>
+    </body>
+</page>

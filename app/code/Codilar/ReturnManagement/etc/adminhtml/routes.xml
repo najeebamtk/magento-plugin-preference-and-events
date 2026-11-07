@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
+    <router id="admin">
+        <!-- URL: /admin/returnmanagement/<controller folder>/<action class> -->
+        <route id="returnmanagement" frontName="returnmanagement">
+            <module name="Codilar_ReturnManagement" before="Magento_Backend"/>
+        </route>
+    </router>
+</config>

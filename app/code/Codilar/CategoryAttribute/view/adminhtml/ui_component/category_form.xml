@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <fieldset name="display_settings">
+        <field name="sale_end_date" sortOrder="100" formElement="date">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">category</item>
+                </item>
+            </argument>
+            <settings>
+                <dataType>string</dataType>
+                <label translate="true">Sale End Date</label>
+                <dataScope>sale_end_date</dataScope>
+            </settings>
+        </field>
+    </fieldset>
+</form>

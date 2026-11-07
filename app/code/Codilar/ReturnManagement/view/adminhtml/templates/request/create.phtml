@@ -1,0 +1,117 @@
+<?php
+/** @var \Codilar\ReturnManagement\Block\Adminhtml\Request\Create $block */
+/** @var \Magento\Framework\Escaper $escaper */
+/** @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer */
+?>
+<div class="page-actions">
+    <a class="action-default back" href="<?= $escaper->escapeUrl($block->getBackUrl()) ?>">
+        <?= $escaper->escapeHtml(__('Back to Return Requests')) ?>
+    </a>
+</div>
+
+<!-- One form. Picking a customer loads that customer's orders by AJAX (see script below). -->
+<form id="return-create-form" method="post" action="<?= $escaper->escapeUrl($block->getCreateUrl()) ?>">
+    <input type="hidden" name="form_key" value="<?= $escaper->escapeHtmlAttr($block->getFormKey()) ?>"/>
+
+    <fieldset class="admin__fieldset">
+        <legend class="admin__legend"><span><?= $escaper->escapeHtml(__('Return Details')) ?></span></legend>
+
+        <div class="admin__field _required">
+            <label class="admin__field-label" for="return-customer"><span><?= $escaper->escapeHtml(__('Customer')) ?></span></label>
+            <div class="admin__field-control">
+                <select id="return-customer" name="customer_id" class="admin__control-select" required>
+                    <option value=""><?= $escaper->escapeHtml(__('-- Please select --')) ?></option>
+                    <?php foreach ($block->getCustomerOptions() as $id => $label): ?>
+                        <option value="<?= (int) $id ?>"><?= $escaper->escapeHtml($label) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+
+        <div class="admin__field _required">
+            <label class="admin__field-label" for="return-order"><span><?= $escaper->escapeHtml(__('Order')) ?></span></label>
+            <div class="admin__field-control">
+                <select id="return-order" name="order_id" class="admin__control-select" required disabled>
+                    <option value=""><?= $escaper->escapeHtml(__('-- Select a customer first --')) ?></option>
+                </select>
+                <div class="admin__field-note">
+                    <span><?= $escaper->escapeHtml(__('Greyed-out orders cannot be returned; the reason is shown next to them. The whole order is returned.')) ?></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin__field _required">
+            <label class="admin__field-label" for="return-reason"><span><?= $escaper->escapeHtml(__('Reason')) ?></span></label>
+            <div class="admin__field-control">
+                <select id="return-reason" name="reason" class="admin__control-select" required>
+                    <option value=""><?= $escaper->escapeHtml(__('-- Please select --')) ?></option>
+                    <?php foreach ($block->getReasons() as $value => $label): ?>
+                        <option value="<?= $escaper->escapeHtmlAttr($value) ?>"><?= $escaper->escapeHtml($label) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+
+        <div class="admin__field">
+            <label class="admin__field-label" for="return-comments"><span><?= $escaper->escapeHtml(__('Comments')) ?></span></label>
+            <div class="admin__field-control">
+                <textarea id="return-comments" name="comments" rows="4" class="admin__control-textarea"></textarea>
+            </div>
+        </div>
+
+        <div class="admin__field">
+            <div class="admin__field-control">
+                <button type="submit" class="action-primary"><?= $escaper->escapeHtml(__('Save Return Request')) ?></button>
+            </div>
+        </div>
+    </fieldset>
+</form>
+
+<?php
+// AJAX: customer changes => ask the Orders controller for that customer's orders => rebuild the order dropdown.
+// $secureRenderer adds the CSP nonce so the admin's Content Security Policy allows this inline script.
+$ordersUrl = $escaper->escapeJs($block->getOrdersUrl());
+$loadingText = $escaper->escapeJs(__('Loading orders...'));
+$selectText = $escaper->escapeJs(__('-- Please select --'));
+$firstText = $escaper->escapeJs(__('-- Select a customer first --'));
+$noneText = $escaper->escapeJs(__('This customer has no orders.'));
+$script = <<<JS
+require(['jquery'], function ($) {
+    var orderSelect = $('#return-order');
+
+    function setPlaceholder(text) {
+        orderSelect.empty().append($('<option>').val('').text(text));
+    }
+
+    $('#return-customer').on('change', function () {
+        var customerId = $(this).val();
+
+        orderSelect.prop('disabled', true);
+        if (!customerId) {
+            setPlaceholder('{$firstText}');
+            return;
+        }
+        setPlaceholder('{$loadingText}');
+
+        $.ajax({
+            url: '{$ordersUrl}',
+            type: 'GET',
+            dataType: 'json',
+            data: {customer_id: customerId, isAjax: true}
+        }).done(function (response) {
+            if (!response.orders.length) {
+                setPlaceholder('{$noneText}');
+                return;
+            }
+            setPlaceholder('{$selectText}');
+            $.each(response.orders, function (i, order) {
+                // .text() (not .html()) so order data is never treated as HTML
+                orderSelect.append($('<option>').val(order.value).text(order.label).prop('disabled', order.disabled));
+            });
+            orderSelect.prop('disabled', false);
+        });
+    });
+});
+JS;
+?>
+<?= /* @noEscape */ $secureRenderer->renderTag('script', [], $script, false) ?>

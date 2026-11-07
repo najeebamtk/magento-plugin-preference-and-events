@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <!-- Main menu: no "parent", so it appears in the left admin sidebar -->
+        <!-- dependsOnConfig: menu is hidden when Enable Module = No (default scope) -->
+        <add id="Codilar_ReturnManagement::returns"
+             title="Return Management"
+             translate="title"
+             module="Codilar_ReturnManagement"
+             sortOrder="35"
+             resource="Codilar_ReturnManagement::returns"
+             dependsOnConfig="return_management/general/enabled"/>
+
+        <!-- Submenu: opens admin/returnmanagement/request/index -->
+        <add id="Codilar_ReturnManagement::requests"
+             title="Return Requests"
+             translate="title"
+             module="Codilar_ReturnManagement"
+             sortOrder="10"
+             parent="Codilar_ReturnManagement::returns"
+             action="returnmanagement/request/index"
+             resource="Codilar_ReturnManagement::requests"/>
+    </menu>
+</config>

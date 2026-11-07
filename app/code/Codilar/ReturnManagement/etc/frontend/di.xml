@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- When "Enable Module" is No, all customer return pages show 404 -->
+    <type name="Codilar\ReturnManagement\Controller\Index\Index">
+        <plugin name="codilar_returns_check_enabled" type="Codilar\ReturnManagement\Plugin\Frontend\CheckModuleEnabled"/>
+    </type>
+    <type name="Codilar\ReturnManagement\Controller\Index\Form">
+        <plugin name="codilar_returns_check_enabled" type="Codilar\ReturnManagement\Plugin\Frontend\CheckModuleEnabled"/>
+    </type>
+    <type name="Codilar\ReturnManagement\Controller\Index\Submit">
+        <plugin name="codilar_returns_check_enabled" type="Codilar\ReturnManagement\Plugin\Frontend\CheckModuleEnabled"/>
+    </type>
+</config>

@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+
+    <!-- CONFIGURATION DATA: one return policy per product -->
+    <table name="codilar_return_policy" resource="default" engine="innodb" comment="Product Return Policy">
+        <column xsi:type="int" name="policy_id" unsigned="true" nullable="false" identity="true" comment="Policy ID"/>
+        <column xsi:type="int" name="product_id" unsigned="true" nullable="false" comment="Product ID"/>
+        <column xsi:type="smallint" name="is_returnable" unsigned="true" nullable="false" default="1" comment="Is Returnable (1 = yes, 0 = no)"/>
+        <column xsi:type="smallint" name="return_window_days" unsigned="true" nullable="false" default="30" comment="Return Window In Days"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="policy_id"/>
+        </constraint>
+
+        <!-- One policy per product -->
+        <constraint xsi:type="unique" referenceId="CODILAR_RETURN_POLICY_PRODUCT_ID">
+            <column name="product_id"/>
+        </constraint>
+
+        <!-- Product deleted => its policy is meaningless => delete it too -->
+        <constraint xsi:type="foreign"
+                    referenceId="CODILAR_RETURN_POLICY_PRODUCT_ID_CATALOG_PRODUCT_ENTITY_ENTITY_ID"
+                    table="codilar_return_policy"
+                    column="product_id"
+                    referenceTable="catalog_product_entity"
+                    referenceColumn="entity_id"
+                    onDelete="CASCADE"/>
+    </table>
+
+    <!-- TRANSACTION DATA: one return request per order -->
+    <table name="codilar_return_request" resource="default" engine="innodb" comment="Return Request">
+        <column xsi:type="int" name="request_id" unsigned="true" nullable="false" identity="true" comment="Request ID"/>
+        <column xsi:type="int" name="customer_id" unsigned="true" nullable="false" comment="Customer ID"/>
+        <column xsi:type="int" name="order_id" unsigned="true" nullable="false" comment="Order ID"/>
+        <column xsi:type="varchar" name="reason" length="50" nullable="false" comment="Reason Code"/>
+        <column xsi:type="text" name="comments" nullable="true" comment="Customer Comments"/>
+        <column xsi:type="varchar" name="status" length="20" nullable="false" default="pending" comment="Status"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="request_id"/>
+        </constraint>
+
+        <!-- Only one return request per order (first version) -->
+        <constraint xsi:type="unique" referenceId="CODILAR_RETURN_REQUEST_ORDER_ID">
+            <column name="order_id"/>
+        </constraint>
+
+        <!-- Faster "My Returns" lookup and grid status filter -->
+        <index referenceId="CODILAR_RETURN_REQUEST_CUSTOMER_ID" indexType="btree">
+            <column name="customer_id"/>
+        </index>
+        <index referenceId="CODILAR_RETURN_REQUEST_STATUS" indexType="btree">
+            <column name="status"/>
+        </index>
+
+        <!-- History is protected: a customer or order with a return request cannot be deleted -->
+        <constraint xsi:type="foreign"
+                    referenceId="CODILAR_RETURN_REQUEST_CUSTOMER_ID_CUSTOMER_ENTITY_ENTITY_ID"
+                    table="codilar_return_request"
+                    column="customer_id"
+                    referenceTable="customer_entity"
+                    referenceColumn="entity_id"
+                    onDelete="NO ACTION"/>
+        <constraint xsi:type="foreign"
+                    referenceId="CODILAR_RETURN_REQUEST_ORDER_ID_SALES_ORDER_ENTITY_ID"
+                    table="codilar_return_request"
+                    column="order_id"
+                    referenceTable="sales_order"
+                    referenceColumn="entity_id"
+                    onDelete="NO ACTION"/>
+    </table>
+
+    <!-- TRANSACTION DATA: products inside a return request (one request => many items) -->
+    <table name="codilar_return_request_item" resource="default" engine="innodb" comment="Return Request Item">
+        <column xsi:type="int" name="request_id" unsigned="true" nullable="false" comment="Request ID"/>
+        <column xsi:type="int" name="order_item_id" unsigned="true" nullable="false" comment="Order Item ID"/>
+        <column xsi:type="int" name="product_id" unsigned="true" nullable="true" comment="Product ID (NULL if product deleted)"/>
+        <column xsi:type="varchar" name="product_sku" length="255" nullable="false" comment="SKU Snapshot"/>
+        <column xsi:type="varchar" name="product_name" length="255" nullable="true" comment="Name Snapshot"/>
+        <column xsi:type="decimal" name="qty_requested" precision="12" scale="4" nullable="false" default="0" comment="Qty Requested"/>
+
+        <!-- Composite primary key: the same order item cannot appear twice in one request -->
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="request_id"/>
+            <column name="order_item_id"/>
+        </constraint>
+
+        <index referenceId="CODILAR_RETURN_REQUEST_ITEM_ORDER_ITEM_ID" indexType="btree">
+            <column name="order_item_id"/>
+        </index>
+        <index referenceId="CODILAR_RETURN_REQUEST_ITEM_PRODUCT_ID" indexType="btree">
+            <column name="product_id"/>
+        </index>
+
+        <!-- Items belong to their request: request deleted => items deleted -->
+        <constraint xsi:type="foreign"
+                    referenceId="CODILAR_RETURN_REQUEST_ITEM_REQUEST_ID_CODILAR_RETURN_REQUEST_REQUEST_ID"
+                    table="codilar_return_request_item"
+                    column="request_id"
+                    referenceTable="codilar_return_request"
+                    referenceColumn="request_id"
+                    onDelete="CASCADE"/>
+
+        <!-- History is protected: an order item with a return cannot be deleted -->
+        <constraint xsi:type="foreign"
+                    referenceId="CODILAR_RETURN_REQUEST_ITEM_ORDER_ITEM_ID_SALES_ORDER_ITEM_ITEM_ID"
+                    table="codilar_return_request_item"
+                    column="order_item_id"
+                    referenceTable="sales_order_item"
+                    referenceColumn="item_id"
+                    onDelete="NO ACTION"/>
+
+        <!-- Product deleted => product_id becomes NULL, SKU/name snapshot stays -->
+        <constraint xsi:type="foreign"
+                    referenceId="CODILAR_RETURN_REQUEST_ITEM_PRODUCT_ID_CATALOG_PRODUCT_ENTITY_ENTITY_ID"
+                    table="codilar_return_request_item"
+                    column="product_id"
+                    referenceTable="catalog_product_entity"
+                    referenceColumn="entity_id"
+                    onDelete="SET NULL"/>
+    </table>
+</schema>

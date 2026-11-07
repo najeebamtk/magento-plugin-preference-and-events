@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Communication/etc/communication.xsd">
+    <!-- Topic = the message name. request="string" = the message is a plain string (our JSON) -->
+    <topic name="codilar.product.sync" request="string"/>
+    <!-- Messages that failed 3 times are published to this topic -->
+    <topic name="codilar.product.sync.failed" request="string"/>
+</config>

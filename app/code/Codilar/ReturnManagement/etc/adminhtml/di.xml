@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- Grid export (CSV / Excel XML): convert these UTC date columns to the store timezone, like the grid shows them -->
+    <type name="Magento\Ui\Model\Export\MetadataProvider">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="codilar_return_request_listing" xsi:type="array">
+                    <item name="created_at" xsi:type="string">created_at</item>
+                    <item name="updated_at" xsi:type="string">updated_at</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+</config>

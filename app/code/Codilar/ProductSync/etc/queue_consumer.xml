@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework-message-queue:etc/consumer.xsd">
+    <!-- Consumer "codilarProductSyncConsumer" reads queue codilar.product.sync
+         and passes each message to Consumer::process() -->
+    <consumer name="codilarProductSyncConsumer"
+              queue="codilar.product.sync"
+              connection="amqp"
+              handler="Codilar\ProductSync\Model\Consumer::process"/>
+</config>
